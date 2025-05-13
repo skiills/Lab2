@@ -1,0 +1,51 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Git') {
+            steps {
+                git branch: 'main', credentialsId: 'git_credentials', url: 'https://github.com/skiills/lab2.git'
+            }
+        }
+        
+        stage('Install Requirements'){
+            steps {
+                dir('lab2'){
+                    sh "pip install -r requirements.txt"
+                }
+            }   
+        }
+        
+        stage('Get Datasets'){
+            steps {
+                dir('lab2'){
+                    sh "python3 data_creation.py"
+                }
+            }   
+        }
+        
+        stage('Preproccessing Data'){
+            steps {
+                dir('lab2'){
+                    sh "python3 data_preprocessing.py"
+                }
+            }   
+        }
+        
+        stage('Training Model'){
+            steps {
+                dir('lab2'){
+                    sh "python3 model_preparation.py"
+                }
+            }   
+        }
+        
+        stage('Testing Model'){
+            steps {
+                dir('lab2'){
+                    sh "python3 model_testing.py"
+                }
+            }   
+        }
+    }
+}
